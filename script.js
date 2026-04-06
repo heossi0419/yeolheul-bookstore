@@ -1,16 +1,11 @@
-console.log("Yeolheul Bookstore premium interaction loaded");
+console.log("Yeolheul Bookstore final premium version loaded");
 
 document.addEventListener("DOMContentLoaded", () => {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // 1) Reveal animation
-  const revealTargets = document.querySelectorAll(
-    ".hero-copy, .hero-visual, .intro-title, .intro-body, .section-head, .link-card, .value-card, .community-copy, .community-panel, .info-card, .mini-card, .closing-box, .panel-item, .time-item"
-  );
-
+  const revealTargets = document.querySelectorAll(".reveal");
   revealTargets.forEach((element, index) => {
-    element.classList.add("reveal");
-    element.style.transitionDelay = `${Math.min(index * 40, 220)}ms`;
+    element.style.transitionDelay = `${Math.min(index * 35, 220)}ms`;
   });
 
   const revealObserver = new IntersectionObserver(
@@ -30,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   revealTargets.forEach((element) => revealObserver.observe(element));
 
-  // 2) Smooth anchor scroll
   const anchorLinks = document.querySelectorAll('a[href^="#"]');
   anchorLinks.forEach((link) => {
     link.addEventListener("click", (event) => {
@@ -44,21 +38,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const header = document.querySelector(".site-header");
       const headerHeight = header ? header.offsetHeight : 0;
-      const targetTop = target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12;
+      const top = target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12;
 
       window.scrollTo({
-        top: targetTop,
+        top,
         behavior: "smooth",
       });
     });
   });
 
+  const header = document.querySelector(".site-header");
+  const handleHeaderShadow = () => {
+    if (!header) return;
+    if (window.scrollY > 10) {
+      header.classList.add("is-scrolled");
+    } else {
+      header.classList.remove("is-scrolled");
+    }
+  };
+
+  handleHeaderShadow();
+  window.addEventListener("scroll", handleHeaderShadow, { passive: true });
+
   if (prefersReducedMotion) return;
 
-  // 3) Premium card tilt
-  const tiltTargets = document.querySelectorAll(
-    ".link-card, .value-card, .mini-card, .info-card, .visual-main, .visual-card"
-  );
+  const tiltTargets = document.querySelectorAll(".tilt-card");
 
   tiltTargets.forEach((card) => {
     let rafId = null;
@@ -88,12 +92,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     card.addEventListener("mouseleave", () => {
       if (rafId) cancelAnimationFrame(rafId);
-      card.style.transform = "";
+
+      if (card.classList.contains("floating-card-top")) {
+        card.style.transform = "rotate(-6deg)";
+      } else if (card.classList.contains("floating-card-bottom")) {
+        card.style.transform = "rotate(5deg)";
+      } else {
+        card.style.transform = "";
+      }
     });
   });
 
-  // 4) Magnetic buttons
-  const magneticTargets = document.querySelectorAll(".btn, .text-link, .card-arrow");
+  const magneticTargets = document.querySelectorAll(".magnetic");
 
   magneticTargets.forEach((element) => {
     let rafId = null;
@@ -119,12 +129,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 5) Hero parallax
-  const heroVisual = document.querySelector(".hero-visual");
-  const visualMain = document.querySelector(".visual-main");
-  const visualCards = document.querySelectorAll(".visual-card");
+  const heroVisual = document.getElementById("heroVisual");
+  const heroMainCard = document.querySelector(".hero-main-card");
+  const floatingCards = document.querySelectorAll(".floating-card");
 
-  if (heroVisual && visualMain) {
+  if (heroVisual && heroMainCard) {
     let rafId = null;
 
     heroVisual.addEventListener("mousemove", (event) => {
@@ -141,19 +150,19 @@ document.addEventListener("DOMContentLoaded", () => {
       if (rafId) cancelAnimationFrame(rafId);
 
       rafId = requestAnimationFrame(() => {
-        visualMain.style.transform = `
+        heroMainCard.style.transform = `
           translate3d(${moveX * 10}px, ${moveY * 10}px, 0)
           rotateX(${moveY * -2.5}deg)
           rotateY(${moveX * 2.5}deg)
         `;
 
-        visualCards.forEach((card, index) => {
+        floatingCards.forEach((card, index) => {
           const depth = index === 0 ? 16 : 22;
-          const rotate = index === 0 ? -6 : 5;
+          const baseRotate = index === 0 ? -6 : 5;
 
           card.style.transform = `
             translate3d(${moveX * depth}px, ${moveY * depth}px, 0)
-            rotate(${rotate}deg)
+            rotate(${baseRotate}deg)
           `;
         });
       });
@@ -162,25 +171,10 @@ document.addEventListener("DOMContentLoaded", () => {
     heroVisual.addEventListener("mouseleave", () => {
       if (rafId) cancelAnimationFrame(rafId);
 
-      visualMain.style.transform = "";
-      visualCards.forEach((card, index) => {
+      heroMainCard.style.transform = "";
+      floatingCards.forEach((card, index) => {
         card.style.transform = index === 0 ? "rotate(-6deg)" : "rotate(5deg)";
       });
     });
   }
-
-  // 6) Header shadow on scroll
-  const header = document.querySelector(".site-header");
-
-  const handleHeaderShadow = () => {
-    if (!header) return;
-    if (window.scrollY > 10) {
-      header.classList.add("is-scrolled");
-    } else {
-      header.classList.remove("is-scrolled");
-    }
-  };
-
-  handleHeaderShadow();
-  window.addEventListener("scroll", handleHeaderShadow, { passive: true });
 });
