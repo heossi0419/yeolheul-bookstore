@@ -12,7 +12,7 @@
   --mist: #A9B8AE;
   --ink: #2E2925;
 
-  --paper: rgba(255, 251, 244, 0.82);
+  --paper: rgba(255, 251, 244, 0.84);
   --paper-strong: rgba(255, 250, 242, 0.94);
   --glass: rgba(255, 248, 239, 0.62);
 
@@ -56,6 +56,9 @@ body {
   letter-spacing: -0.02em;
   overflow-x: hidden;
   position: relative;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  text-rendering: optimizeLegibility;
 }
 
 .page-noise {
@@ -262,6 +265,18 @@ textarea {
   min-height: calc(100vh - 120px);
 }
 
+.hero-copy,
+.section-copy,
+.community-copy,
+.info-copy,
+.closing-box,
+.feature-card p,
+.value-card p,
+.mini-card p,
+.hero-main-card p {
+  word-break: keep-all;
+}
+
 .hero-copy h1 {
   margin-top: 18px;
   font-family: "Maru Buri", serif;
@@ -269,12 +284,22 @@ textarea {
   line-height: 1.08;
   letter-spacing: -0.05em;
   color: var(--ink);
+  word-break: keep-all;
+}
+
+.hero-text,
+.section-copy p,
+.community-copy p,
+.info-copy,
+.closing-box p {
+  max-width: 62ch;
+  line-height: 1.9;
+  font-size: 1.04rem;
+  letter-spacing: -0.015em;
 }
 
 .hero-text {
   margin-top: 24px;
-  max-width: 620px;
-  font-size: 1.08rem;
   color: var(--river);
 }
 
@@ -295,6 +320,7 @@ textarea {
   border-bottom: 1px solid rgba(141, 147, 136, 0.42);
   padding-bottom: 2px;
   display: inline-flex;
+  transition: transform 0.28s ease, color 0.28s ease, border-color 0.28s ease;
 }
 
 .btn {
@@ -440,13 +466,15 @@ textarea {
   margin-top: 16px;
   font-family: "Maru Buri", serif;
   font-size: 2.08rem;
-  line-height: 1.32;
+  line-height: 1.28;
   letter-spacing: -0.04em;
+  word-break: keep-all;
 }
 
 .hero-main-card p {
   margin-top: 14px;
   color: var(--river);
+  line-height: 1.88;
 }
 
 .floating-card {
@@ -473,7 +501,7 @@ textarea {
 
 .floating-card strong {
   font-size: 0.98rem;
-  line-height: 1.52;
+  line-height: 1.58;
 }
 
 .floating-card-top {
@@ -510,20 +538,19 @@ textarea {
   font-size: clamp(2rem, 3.7vw, 3.2rem);
   line-height: 1.22;
   letter-spacing: -0.04em;
+  word-break: keep-all;
 }
 
 .section-copy p,
-.section-head p,
 .community-copy p,
-.info-copy,
 .closing-box p {
   color: var(--river);
-  font-size: 1.04rem;
 }
 
 .section-copy p + p,
-.community-copy p + p {
-  margin-top: 14px;
+.community-copy p + p,
+.closing-box p + p {
+  margin-top: 16px;
 }
 
 .section-head {
@@ -534,10 +561,18 @@ textarea {
   max-width: 760px;
 }
 
+.section-head p {
+  max-width: 60ch;
+  line-height: 1.85;
+  color: var(--river);
+  font-size: 1.02rem;
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 18px;
+  align-items: stretch;
 }
 
 .feature-card,
@@ -553,8 +588,11 @@ textarea {
 
 .feature-card {
   min-height: 275px;
-  padding: 30px;
+  padding: 32px 30px 30px;
   border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .feature-card:hover,
@@ -574,20 +612,23 @@ textarea {
 
 .feature-card h3 {
   margin-top: 14px;
+  margin-bottom: 10px;
   font-size: 1.34rem;
   line-height: 1.32;
 }
 
 .feature-card p {
-  margin-top: 12px;
   color: var(--river);
+  line-height: 1.82;
+  font-size: 0.98rem;
 }
 
 .card-arrow {
   display: inline-flex;
-  margin-top: 18px;
+  margin-top: 22px;
   font-weight: 800;
   color: var(--forest);
+  transition: transform 0.28s ease, color 0.28s ease;
 }
 
 .value-grid {
@@ -597,18 +638,20 @@ textarea {
 }
 
 .value-card {
-  padding: 30px 26px;
+  padding: 32px 28px 30px;
   border-radius: 28px;
 }
 
 .value-card h3 {
   font-size: 1.18rem;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   color: var(--ink);
 }
 
 .value-card p {
   color: var(--river);
+  line-height: 1.82;
+  font-size: 0.98rem;
 }
 
 .community-grid {
@@ -645,6 +688,7 @@ textarea {
 
 .panel-item span {
   color: rgba(249, 245, 237, 0.76);
+  line-height: 1.7;
 }
 
 .visit-grid {
@@ -653,21 +697,33 @@ textarea {
 
 .info-card {
   border-radius: 34px;
-  padding: 34px;
+  padding: 34px 34px 32px;
   background:
     linear-gradient(180deg, rgba(255, 251, 244, 0.90), rgba(245, 240, 230, 0.82));
+}
+
+.info-card h2 {
+  margin-bottom: 10px;
+}
+
+.info-copy {
+  color: var(--river);
+  margin-top: 14px;
+  margin-bottom: 6px;
 }
 
 .time-list {
   margin-top: 24px;
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .time-item {
   display: flex;
   justify-content: space-between;
   gap: 18px;
+  align-items: center;
+  min-height: 64px;
   padding: 16px 18px;
   border-radius: 18px;
   background: rgba(255, 250, 242, 0.60);
@@ -684,11 +740,13 @@ textarea {
 .time-item strong {
   color: var(--forest);
   font-weight: 800;
+  line-height: 1.5;
 }
 
 .time-item span {
   color: var(--river);
   text-align: right;
+  line-height: 1.5;
 }
 
 .visit-side {
@@ -697,19 +755,21 @@ textarea {
 }
 
 .mini-card {
-  padding: 24px;
+  padding: 32px 28px 30px;
   border-radius: 26px;
 }
 
 .mini-card strong {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   font-size: 1.08rem;
   color: var(--ink);
 }
 
 .mini-card p {
   color: var(--river);
+  line-height: 1.82;
+  font-size: 0.98rem;
 }
 
 .closing-box {
@@ -735,6 +795,11 @@ textarea {
   border-top: 1px solid rgba(68, 80, 59, 0.12);
   text-align: center;
   color: var(--river);
+}
+
+.footer-inner p {
+  line-height: 1.7;
+  letter-spacing: -0.01em;
 }
 
 .reveal {
@@ -810,7 +875,18 @@ textarea {
   }
 
   .hero-copy h1 {
-    font-size: 2.6rem;
+    font-size: 2.55rem;
+    line-height: 1.16;
+  }
+
+  .hero-text,
+  .section-copy p,
+  .community-copy p,
+  .info-copy,
+  .closing-box p {
+    max-width: 100%;
+    font-size: 1rem;
+    line-height: 1.85;
   }
 
   .hero-actions {
@@ -819,6 +895,7 @@ textarea {
 
   .btn {
     width: 100%;
+    min-height: 56px;
   }
 
   .hero-visual {
@@ -842,9 +919,17 @@ textarea {
     transform: none !important;
   }
 
+  .feature-card,
+  .value-card,
+  .info-card,
+  .mini-card {
+    padding: 26px 22px;
+  }
+
   .time-item {
     flex-direction: column;
     align-items: flex-start;
+    min-height: unset;
   }
 
   .time-item span {
