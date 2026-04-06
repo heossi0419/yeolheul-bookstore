@@ -804,3 +804,54 @@ textarea {
     border-radius: 28px;
   }
 }
+
+.site-header {
+  transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.site-header.is-scrolled {
+  background: rgba(245, 240, 230, 0.78);
+  box-shadow: 0 10px 30px rgba(46, 41, 37, 0.06);
+  border-bottom-color: rgba(68, 80, 59, 0.10);
+}
+
+.link-card,
+.value-card,
+.mini-card,
+.info-card,
+.visual-main,
+.visual-card,
+.btn,
+.text-link,
+.card-arrow {
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border-color 0.28s ease,
+    background 0.28s ease,
+    color 0.28s ease;
+  will-change: transform;
+}
+
+.link-card:hover,
+.value-card:hover,
+.mini-card:hover,
+.info-card:hover {
+  box-shadow: 0 28px 60px rgba(46, 41, 37, 0.12);
+}
+
+.btn:hover {
+  box-shadow: 0 20px 42px rgba(46, 41, 37, 0.14);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(36px) scale(0.985);
+  filter: blur(8px);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
