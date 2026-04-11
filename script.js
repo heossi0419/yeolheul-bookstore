@@ -1,4 +1,4 @@
-console.log("Yeolheul Bookstore final premium version loaded");
+console.log("Yeolheul Bookstore immersive premium version loaded");
 
 document.addEventListener("DOMContentLoaded", () => {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -48,17 +48,27 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const header = document.querySelector(".site-header");
-  const handleHeaderShadow = () => {
-    if (!header) return;
-    if (window.scrollY > 10) {
-      header.classList.add("is-scrolled");
-    } else {
-      header.classList.remove("is-scrolled");
+  const progressBar = document.querySelector(".scroll-progress-bar");
+
+  const handleScrollUi = () => {
+    if (header) {
+      if (window.scrollY > 10) {
+        header.classList.add("is-scrolled");
+      } else {
+        header.classList.remove("is-scrolled");
+      }
+    }
+
+    if (progressBar) {
+      const scrollTop = window.pageYOffset;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = `${Math.min(progress, 100)}%`;
     }
   };
 
-  handleHeaderShadow();
-  window.addEventListener("scroll", handleHeaderShadow, { passive: true });
+  handleScrollUi();
+  window.addEventListener("scroll", handleScrollUi, { passive: true });
 
   if (prefersReducedMotion) return;
 
@@ -129,51 +139,61 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  const heroVisual = document.getElementById("heroVisual");
-  const heroMainCard = document.querySelector(".hero-main-card");
-  const floatingCards = document.querySelectorAll(".floating-card");
+  const heroStage = document.getElementById("heroStage");
+  const stageItems = heroStage ? heroStage.querySelectorAll(".stage-depth-1, .stage-depth-2, .stage-depth-3, .stage-depth-4") : [];
 
-  if (heroVisual && heroMainCard) {
+  if (heroStage && stageItems.length) {
     let rafId = null;
 
-    heroVisual.addEventListener("mousemove", (event) => {
-      const rect = heroVisual.getBoundingClientRect();
+    heroStage.addEventListener("mousemove", (event) => {
+      const rect = heroStage.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
-
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
 
-      const moveX = (x - centerX) / centerX;
-      const moveY = (y - centerY) / centerY;
+      const dx = (x - centerX) / centerX;
+      const dy = (y - centerY) / centerY;
 
       if (rafId) cancelAnimationFrame(rafId);
 
       rafId = requestAnimationFrame(() => {
-        heroMainCard.style.transform = `
-          translate3d(${moveX * 10}px, ${moveY * 10}px, 0)
-          rotateX(${moveY * -2.5}deg)
-          rotateY(${moveX * 2.5}deg)
-        `;
+        heroStage.style.transform = `rotateX(${dy * -1.2}deg) rotateY(${dx * 1.2}deg)`;
 
-        floatingCards.forEach((card, index) => {
-          const depth = index === 0 ? 16 : 22;
-          const baseRotate = index === 0 ? -6 : 5;
+        stageItems.forEach((item) => {
+          let depth = 10;
+          if (item.classList.contains("stage-depth-2")) depth = 16;
+          if (item.classList.contains("stage-depth-3")) depth = 22;
+          if (item.classList.contains("stage-depth-4")) depth = 28;
 
-          card.style.transform = `
-            translate3d(${moveX * depth}px, ${moveY * depth}px, 0)
-            rotate(${baseRotate}deg)
-          `;
+          const tx = dx * depth;
+          const ty = dy * depth;
+
+          let baseTransform = "";
+
+          if (item.classList.contains("floating-card-top")) baseTransform = "rotate(-6deg)";
+          if (item.classList.contains("floating-card-bottom")) baseTransform = "rotate(5deg)";
+          if (item.classList.contains("floating-band")) baseTransform = "translateX(-50%)";
+
+          item.style.transform = `${baseTransform} translate3d(${tx}px, ${ty}px, 0)`;
         });
       });
     });
 
-    heroVisual.addEventListener("mouseleave", () => {
+    heroStage.addEventListener("mouseleave", () => {
       if (rafId) cancelAnimationFrame(rafId);
 
-      heroMainCard.style.transform = "";
-      floatingCards.forEach((card, index) => {
-        card.style.transform = index === 0 ? "rotate(-6deg)" : "rotate(5deg)";
+      heroStage.style.transform = "";
+      stageItems.forEach((item) => {
+        if (item.classList.contains("floating-card-top")) {
+          item.style.transform = "rotate(-6deg)";
+        } else if (item.classList.contains("floating-card-bottom")) {
+          item.style.transform = "rotate(5deg)";
+        } else if (item.classList.contains("floating-band")) {
+          item.style.transform = "translateX(-50%)";
+        } else {
+          item.style.transform = "";
+        }
       });
     });
   }
