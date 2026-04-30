@@ -99,7 +99,7 @@ body {
   background: rgba(247, 242, 232, 0.94);
   backdrop-filter: blur(10px);
   z-index: 30;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
+  transition: opacity 0.55s ease, visibility 0.55s ease;
 }
 
 .intro-overlay.is-hidden {
@@ -230,9 +230,6 @@ body {
   position: absolute;
   top: 28px;
   left: 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
   opacity: 0;
   transform: translateY(14px);
 }

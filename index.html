@@ -21,24 +21,15 @@
   <div class="page-glow glow-left"></div>
   <div class="page-glow glow-right"></div>
 
-  <!-- intro -->
-  <div class="intro-overlay" id="introOverlay">
+  <div class="intro-overlay" id="introOverlay" aria-hidden="true">
     <div class="intro-paper">
       <div class="intro-grid"></div>
 
-      <div class="intro-content">
-        <span class="intro-kicker">manuscript opening</span>
-
-        <div class="writing-stage" id="writingStage">
-          <div class="writing-mask" id="writingMask">
-            <span class="writing-text" id="writingText">열흘책방 물결상점</span>
-          </div>
-          <span class="pencil-cursor" id="pencilCursor"></span>
+      <div class="writing-stage">
+        <div class="writing-mask" id="writingMask">
+          <span class="writing-text" id="writingText">열흘책방 물결상점</span>
         </div>
-
-        <p class="intro-sub" id="introSub">
-          작은 책방 세계가 천천히 열립니다
-        </p>
+        <span class="pencil-cursor" id="pencilCursor"></span>
       </div>
 
       <div class="wave-wash" id="waveWash"></div>
@@ -49,15 +40,11 @@
     <canvas id="world"></canvas>
 
     <div class="ui-layer">
-      <section class="title-panel">
-        <span class="eyebrow">mini 3d bookstore world</span>
-
+      <section class="title-panel" id="titlePanel">
         <div class="manuscript-box">
           <div class="paper-grid" aria-hidden="true"></div>
           <h1>열흘책방<br />물결상점</h1>
         </div>
-
-        <p class="scene-hint">오브젝트를 클릭하거나 드래그해 둘러보세요</p>
       </section>
 
       <aside class="info-panel" id="infoPanel">
@@ -72,6 +59,9 @@
     </div>
   </main>
 
-  <script type="module" src="script.js"></script>
+  <!-- 전역 CDN 방식 -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

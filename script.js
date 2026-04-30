@@ -1,7 +1,3 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.169.0/+esm";
-import { RoundedBoxGeometry } from "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/geometries/RoundedBoxGeometry.js";
-import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.12.5/+esm";
-
 const canvas = document.getElementById("world");
 const infoKicker = document.getElementById("infoKicker");
 const infoTitle = document.getElementById("infoTitle");
@@ -13,8 +9,8 @@ const writingMask = document.getElementById("writingMask");
 const writingText = document.getElementById("writingText");
 const pencilCursor = document.getElementById("pencilCursor");
 const waveWash = document.getElementById("waveWash");
-const titlePanel = document.querySelector(".title-panel");
-const infoPanel = document.querySelector(".info-panel");
+const titlePanel = document.getElementById("titlePanel");
+const infoPanel = document.getElementById("infoPanel");
 
 const scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0xf7f2e8, 12, 24);
@@ -26,7 +22,6 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -38,17 +33,11 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(0, 4.8, 9.8);
 
-const cameraBase = new THREE.Vector3(0, 4.8, 9.8);
+const cameraBase = { x: 0, y: 4.8, z: 9.8 };
 const mouseScene = { x: 0, y: 0 };
 
 const world = new THREE.Group();
 scene.add(world);
-
-const palette = {
-  paper: 0xfffaf3,
-  blue: 0x4da9e6,
-  blueDeep: 0x226b9f,
-};
 
 const ambient = new THREE.AmbientLight(0xffffff, 1.35);
 scene.add(ambient);
@@ -69,13 +58,31 @@ sun.shadow.camera.top = 10;
 sun.shadow.camera.bottom = -10;
 scene.add(sun);
 
-function makeMaterial(color, extra = {}) {
-  return new THREE.MeshStandardMaterial({
-    color,
-    roughness: 0.72,
-    metalness: 0.04,
-    ...extra,
-  });
+function makeMaterial(color, extra) {
+  return new THREE.MeshStandardMaterial(
+    Object.assign(
+      {
+        color,
+        roughness: 0.72,
+        metalness: 0.04,
+      },
+      extra || {}
+    )
+  );
+}
+
+function roundedBox(w, h, d, color, extra) {
+  const group = new THREE.Group();
+
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(w, h, d),
+    makeMaterial(color, extra)
+  );
+  body.castShadow = true;
+  body.receiveShadow = true;
+  group.add(body);
+
+  return group;
 }
 
 const clickable = [];
@@ -84,8 +91,13 @@ const pointer = new THREE.Vector2();
 let hovered = null;
 let introFinished = false;
 
+function registerInteractive(object, data) {
+  object.userData = data;
+  clickable.push(object);
+}
+
 const desk = new THREE.Mesh(
-  new RoundedBoxGeometry(11.5, 0.8, 8, 10, 0.25),
+  new THREE.BoxGeometry(11.5, 0.8, 8),
   makeMaterial(0xfffaf3, { roughness: 0.92 })
 );
 desk.position.set(0, -1.5, 0);
@@ -94,25 +106,25 @@ desk.castShadow = true;
 world.add(desk);
 
 const rug = new THREE.Mesh(
-  new RoundedBoxGeometry(9.5, 0.06, 6.4, 10, 0.18),
+  new THREE.BoxGeometry(9.5, 0.06, 6.4),
   makeMaterial(0xcbe9ff, { roughness: 1 })
 );
-rug.position.set(0, -1.1, 0.2);
+rug.position.set(0, -1.08, 0.2);
 rug.receiveShadow = true;
 world.add(rug);
 
-function createWaveRibbon(x, z, scale = 1) {
+function createWaveRibbon(x, z, scale) {
   const group = new THREE.Group();
 
   const ribbon = new THREE.Mesh(
-    new RoundedBoxGeometry(1.4 * scale, 0.18, 0.5 * scale, 8, 0.09),
+    new THREE.BoxGeometry(1.4 * scale, 0.18, 0.5 * scale),
     makeMaterial(0x4da9e6, { emissive: 0x4da9e6, emissiveIntensity: 0.08 })
   );
   ribbon.rotation.z = Math.PI * 0.14;
   group.add(ribbon);
 
   const ribbon2 = new THREE.Mesh(
-    new RoundedBoxGeometry(1.1 * scale, 0.16, 0.42 * scale, 8, 0.09),
+    new THREE.BoxGeometry(1.1 * scale, 0.16, 0.42 * scale),
     makeMaterial(0x8fd0f7, { emissive: 0x8fd0f7, emissiveIntensity: 0.05 })
   );
   ribbon2.position.set(0.4 * scale, 0.18, 0.05);
@@ -148,7 +160,7 @@ function createStore() {
   const group = new THREE.Group();
 
   const body = new THREE.Mesh(
-    new RoundedBoxGeometry(3.8, 2.4, 2.6, 10, 0.18),
+    new THREE.BoxGeometry(3.8, 2.4, 2.6),
     makeMaterial(0xfffaf3)
   );
   body.castShadow = true;
@@ -156,7 +168,7 @@ function createStore() {
   group.add(body);
 
   const roof = new THREE.Mesh(
-    new RoundedBoxGeometry(4.2, 0.4, 3, 10, 0.18),
+    new THREE.BoxGeometry(4.2, 0.4, 3),
     makeMaterial(0xb8ddf8)
   );
   roof.position.y = 1.45;
@@ -164,7 +176,7 @@ function createStore() {
   group.add(roof);
 
   const awning = new THREE.Mesh(
-    new RoundedBoxGeometry(3.1, 0.24, 0.5, 10, 0.12),
+    new THREE.BoxGeometry(3.1, 0.24, 0.5),
     makeMaterial(0x7bc2ee)
   );
   awning.position.set(0, 0.7, 1.28);
@@ -172,14 +184,14 @@ function createStore() {
   group.add(awning);
 
   const door = new THREE.Mesh(
-    new RoundedBoxGeometry(0.88, 1.55, 0.14, 8, 0.06),
+    new THREE.BoxGeometry(0.88, 1.55, 0.14),
     makeMaterial(0x9fd7fb)
   );
   door.position.set(0, -0.42, 1.36);
   group.add(door);
 
   const leftWindow = new THREE.Mesh(
-    new RoundedBoxGeometry(0.96, 0.9, 0.12, 8, 0.05),
+    new THREE.BoxGeometry(0.96, 0.9, 0.12),
     makeMaterial(0xdff2ff)
   );
   leftWindow.position.set(-1.15, 0.08, 1.35);
@@ -190,7 +202,7 @@ function createStore() {
   group.add(rightWindow);
 
   const sign = new THREE.Mesh(
-    new RoundedBoxGeometry(2, 0.48, 0.16, 8, 0.08),
+    new THREE.BoxGeometry(2, 0.48, 0.16),
     makeMaterial(0xfff2d3)
   );
   sign.position.set(0, 1.02, 1.34);
@@ -210,12 +222,7 @@ function createStore() {
 }
 createStore();
 
-function registerInteractive(mesh, data) {
-  mesh.userData = { ...data };
-  clickable.push(mesh);
-}
-
-function animateFloat(target, y = 0.12, r = 0.12, duration = 2.6) {
+function animateFloat(target, y, r, duration) {
   gsap.to(target.position, {
     y: target.position.y + y,
     duration,
@@ -236,14 +243,14 @@ function createBook() {
   const group = new THREE.Group();
 
   const cover = new THREE.Mesh(
-    new RoundedBoxGeometry(1.35, 0.28, 1.85, 10, 0.08),
+    new THREE.BoxGeometry(1.35, 0.28, 1.85),
     makeMaterial(0x5fb1ea)
   );
   cover.castShadow = true;
   group.add(cover);
 
   const pages = new THREE.Mesh(
-    new RoundedBoxGeometry(1.14, 0.18, 1.56, 8, 0.06),
+    new THREE.BoxGeometry(1.14, 0.18, 1.56),
     makeMaterial(0xfffaf3)
   );
   pages.position.y = 0.16;
@@ -269,7 +276,7 @@ function createInstagramCard() {
   const group = new THREE.Group();
 
   const base = new THREE.Mesh(
-    new RoundedBoxGeometry(1.45, 0.24, 1.45, 10, 0.12),
+    new THREE.BoxGeometry(1.45, 0.24, 1.45),
     makeMaterial(0xe6f6ff)
   );
   base.castShadow = true;
@@ -310,14 +317,14 @@ function createBlogNote() {
   const group = new THREE.Group();
 
   const note = new THREE.Mesh(
-    new RoundedBoxGeometry(1.55, 0.22, 1.2, 10, 0.08),
+    new THREE.BoxGeometry(1.55, 0.22, 1.2),
     makeMaterial(0xfff4d8)
   );
   note.castShadow = true;
   group.add(note);
 
   const clip = new THREE.Mesh(
-    new RoundedBoxGeometry(0.42, 0.06, 0.2, 6, 0.04),
+    new THREE.BoxGeometry(0.42, 0.06, 0.2),
     makeMaterial(0x90caef)
   );
   clip.position.set(0, 0.15, -0.36);
@@ -343,7 +350,7 @@ function createGuideSign() {
   const group = new THREE.Group();
 
   const pole = new THREE.Mesh(
-    new RoundedBoxGeometry(0.16, 1.2, 0.16, 6, 0.05),
+    new THREE.BoxGeometry(0.16, 1.2, 0.16),
     makeMaterial(0x9fd7fb)
   );
   pole.position.y = 0.56;
@@ -351,7 +358,7 @@ function createGuideSign() {
   group.add(pole);
 
   const panel = new THREE.Mesh(
-    new RoundedBoxGeometry(1.28, 0.62, 0.18, 8, 0.08),
+    new THREE.BoxGeometry(1.28, 0.62, 0.18),
     makeMaterial(0xeaf7ff)
   );
   panel.position.set(0, 1.02, 0);
@@ -384,7 +391,7 @@ function createHoursCard() {
   const group = new THREE.Group();
 
   const card = new THREE.Mesh(
-    new RoundedBoxGeometry(1.42, 0.2, 1.42, 10, 0.08),
+    new THREE.BoxGeometry(1.42, 0.2, 1.42),
     makeMaterial(0xf7fbff)
   );
   card.castShadow = true;
@@ -414,9 +421,9 @@ function createHoursCard() {
 createHoursCard();
 
 function updateInfo(data) {
-  infoKicker.textContent = data.kicker ?? "object";
-  infoTitle.textContent = data.title ?? "열흘책방 물결상점";
-  infoText.textContent = data.text ?? "";
+  infoKicker.textContent = data.kicker || "object";
+  infoTitle.textContent = data.title || "열흘책방 물결상점";
+  infoText.textContent = data.text || "";
 }
 
 const sceneTarget = new THREE.Vector3(0, 0.4, 0);
@@ -441,23 +448,21 @@ function getIntersects(event) {
 
 function clearHover(mesh) {
   if (!mesh) return;
-  const mat = mesh.material;
-  if (mat && "emissiveIntensity" in mat) {
-    gsap.to(mat, { emissiveIntensity: 0, duration: 0.18 });
+  if (mesh.material && mesh.material.emissive) {
+    gsap.to(mesh.material, { emissiveIntensity: 0, duration: 0.18 });
   }
   gsap.to(mesh.scale, { x: 1, y: 1, z: 1, duration: 0.18 });
 }
 
 function applyHover(mesh) {
-  const mat = mesh.material;
-  if (mat && "emissive" in mat) {
-    mat.emissive = new THREE.Color(palette.blue);
-    gsap.to(mat, { emissiveIntensity: 0.18, duration: 0.18 });
+  if (mesh.material && mesh.material.emissive) {
+    mesh.material.emissive = new THREE.Color(0x4da9e6);
+    gsap.to(mesh.material, { emissiveIntensity: 0.18, duration: 0.18 });
   }
   gsap.to(mesh.scale, { x: 1.06, y: 1.06, z: 1.06, duration: 0.18 });
 }
 
-window.addEventListener("pointermove", (event) => {
+window.addEventListener("pointermove", function (event) {
   mouseScene.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouseScene.y = (event.clientY / window.innerHeight) * 2 - 1;
 
@@ -489,8 +494,8 @@ window.addEventListener("pointermove", (event) => {
     }
 
     hoverTag.textContent = target.userData.label || target.userData.title || "";
-    hoverTag.style.left = `${event.clientX}px`;
-    hoverTag.style.top = `${event.clientY}px`;
+    hoverTag.style.left = event.clientX + "px";
+    hoverTag.style.top = event.clientY + "px";
     hoverTag.classList.add("is-visible");
     document.body.style.cursor = "pointer";
   } else {
@@ -499,7 +504,7 @@ window.addEventListener("pointermove", (event) => {
   }
 });
 
-window.addEventListener("pointerdown", (event) => {
+window.addEventListener("pointerdown", function (event) {
   if (!introFinished) return;
   isDragging = true;
   dragStartX = event.clientX;
@@ -508,11 +513,12 @@ window.addEventListener("pointerdown", (event) => {
   dragBaseRotationY = world.rotation.y;
 });
 
-window.addEventListener("pointerup", (event) => {
+window.addEventListener("pointerup", function (event) {
   if (!introFinished) return;
 
   const moved =
-    Math.abs(event.clientX - dragStartX) > 6 || Math.abs(event.clientY - dragStartY) > 6;
+    Math.abs(event.clientX - dragStartX) > 6 ||
+    Math.abs(event.clientY - dragStartY) > 6;
 
   isDragging = false;
 
@@ -532,18 +538,18 @@ window.addEventListener("pointerup", (event) => {
   );
 
   if (data.link) {
-    gsap.delayedCall(0.18, () => {
+    gsap.delayedCall(0.18, function () {
       window.open(data.link, "_blank", "noopener,noreferrer");
     });
   }
 });
 
-window.addEventListener("pointerleave", () => {
+window.addEventListener("pointerleave", function () {
   isDragging = false;
   hoverTag.classList.remove("is-visible");
 });
 
-window.addEventListener("resize", () => {
+window.addEventListener("resize", function () {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -566,65 +572,60 @@ function finishIntro() {
     ease: "power2.out",
   });
 
-  setTimeout(() => {
+  setTimeout(function () {
     introOverlay.style.display = "none";
   }, 700);
 }
 
-async function playIntro() {
-  if (document.fonts?.ready) {
-    try {
-      await document.fonts.ready;
-    } catch {}
-  }
+function playIntro() {
+  setTimeout(function () {
+    const targetWidth = Math.ceil(writingText.getBoundingClientRect().width);
 
-  const targetWidth = Math.ceil(writingText.getBoundingClientRect().width);
+    gsap.set(writingMask, { width: 0 });
+    gsap.set(pencilCursor, { x: -28, opacity: 1 });
+    gsap.set(waveWash, { yPercent: 0 });
 
-  gsap.set(writingMask, { width: 0 });
-  gsap.set(pencilCursor, { x: -28, opacity: 1 });
-  gsap.set(waveWash, { yPercent: 0 });
+    const tl = gsap.timeline({
+      onComplete: finishIntro,
+    });
 
-  const tl = gsap.timeline({
-    onComplete: finishIntro,
-  });
-
-  tl.to(writingMask, {
-    width: targetWidth,
-    duration: 2.1,
-    ease: "power2.inOut",
-  });
-
-  tl.to(
-    pencilCursor,
-    {
-      x: targetWidth + 10,
+    tl.to(writingMask, {
+      width: targetWidth,
       duration: 2.1,
       ease: "power2.inOut",
-    },
-    "<"
-  );
+    });
 
-  tl.to({}, { duration: 0.45 });
+    tl.to(
+      pencilCursor,
+      {
+        x: targetWidth + 10,
+        duration: 2.1,
+        ease: "power2.inOut",
+      },
+      "<"
+    );
 
-  tl.to(waveWash, {
-    yPercent: -122,
-    duration: 1.45,
-    ease: "power2.inOut",
-  });
+    tl.to({}, { duration: 0.45 });
 
-  tl.to(
-    ".writing-stage",
-    {
-      autoAlpha: 0,
-      y: -6,
-      filter: "blur(5px)",
-      duration: 1,
-      ease: "power2.out",
-    },
-    "<0.05"
-  );
+    tl.to(waveWash, {
+      yPercent: -122,
+      duration: 1.45,
+      ease: "power2.inOut",
+    });
 
-  // failsafe
+    tl.to(
+      ".writing-stage",
+      {
+        autoAlpha: 0,
+        y: -6,
+        filter: "blur(5px)",
+        duration: 1,
+        ease: "power2.out",
+      },
+      "<0.05"
+    );
+  }, 120);
+
   setTimeout(finishIntro, 5200);
 }
 
