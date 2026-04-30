@@ -1,6 +1,6 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js";
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.169.0/+esm";
 import { RoundedBoxGeometry } from "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/geometries/RoundedBoxGeometry.js";
-import { gsap } from "https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js";
+import gsap from "https://cdn.jsdelivr.net/npm/gsap@3.12.5/+esm";
 
 const canvas = document.getElementById("world");
 const infoKicker = document.getElementById("infoKicker");
@@ -13,7 +13,8 @@ const writingMask = document.getElementById("writingMask");
 const writingText = document.getElementById("writingText");
 const pencilCursor = document.getElementById("pencilCursor");
 const waveWash = document.getElementById("waveWash");
-const introSub = document.getElementById("introSub");
+const titlePanel = document.querySelector(".title-panel");
+const infoPanel = document.querySelector(".info-panel");
 
 const scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0xf7f2e8, 12, 24);
@@ -44,15 +45,9 @@ const world = new THREE.Group();
 scene.add(world);
 
 const palette = {
-  ivory: 0xf7f2e8,
   paper: 0xfffaf3,
-  sky: 0xdff2ff,
-  skyDeep: 0xa9daff,
   blue: 0x4da9e6,
   blueDeep: 0x226b9f,
-  ink: 0x22303b,
-  peach: 0xffe7c9,
-  yellow: 0xfff3c8,
 };
 
 const ambient = new THREE.AmbientLight(0xffffff, 1.35);
@@ -87,10 +82,11 @@ const clickable = [];
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 let hovered = null;
+let introFinished = false;
 
 const desk = new THREE.Mesh(
   new RoundedBoxGeometry(11.5, 0.8, 8, 10, 0.25),
-  makeMaterial(palette.paper, { roughness: 0.92 })
+  makeMaterial(0xfffaf3, { roughness: 0.92 })
 );
 desk.position.set(0, -1.5, 0);
 desk.receiveShadow = true;
@@ -110,7 +106,7 @@ function createWaveRibbon(x, z, scale = 1) {
 
   const ribbon = new THREE.Mesh(
     new RoundedBoxGeometry(1.4 * scale, 0.18, 0.5 * scale, 8, 0.09),
-    makeMaterial(palette.blue, { emissive: palette.blue, emissiveIntensity: 0.08 })
+    makeMaterial(0x4da9e6, { emissive: 0x4da9e6, emissiveIntensity: 0.08 })
   );
   ribbon.rotation.z = Math.PI * 0.14;
   group.add(ribbon);
@@ -201,17 +197,6 @@ function createStore() {
   sign.castShadow = true;
   group.add(sign);
 
-  const signDotL = new THREE.Mesh(
-    new THREE.SphereGeometry(0.06, 16, 16),
-    makeMaterial(palette.blue)
-  );
-  signDotL.position.set(-0.82, 1.02, 1.45);
-  group.add(signDotL);
-
-  const signDotR = signDotL.clone();
-  signDotR.position.x = 0.82;
-  group.add(signDotR);
-
   group.position.set(0, 0.02, -1.95);
   world.add(group);
 
@@ -262,15 +247,7 @@ function createBook() {
     makeMaterial(0xfffaf3)
   );
   pages.position.y = 0.16;
-  pages.position.z = 0.02;
   group.add(pages);
-
-  const bookmark = new THREE.Mesh(
-    new RoundedBoxGeometry(0.14, 0.08, 0.58, 6, 0.04),
-    makeMaterial(0xffd9b6)
-  );
-  bookmark.position.set(0.36, 0.16, 0.72);
-  group.add(bookmark);
 
   group.position.set(-2.9, -0.67, 1.2);
   group.rotation.set(-0.12, 0.45, 0.08);
@@ -346,17 +323,6 @@ function createBlogNote() {
   clip.position.set(0, 0.15, -0.36);
   group.add(clip);
 
-  const line1 = new THREE.Mesh(
-    new RoundedBoxGeometry(0.84, 0.02, 0.04, 4, 0.01),
-    makeMaterial(0xb7dff9)
-  );
-  line1.position.set(0, 0.14, -0.02);
-  group.add(line1);
-
-  const line2 = line1.clone();
-  line2.position.z = 0.18;
-  group.add(line2);
-
   group.position.set(-0.7, -0.64, 2.05);
   group.rotation.set(-0.1, 0.12, -0.06);
   world.add(group);
@@ -391,14 +357,6 @@ function createGuideSign() {
   panel.position.set(0, 1.02, 0);
   panel.castShadow = true;
   group.add(panel);
-
-  const arrow = new THREE.Mesh(
-    new RoundedBoxGeometry(0.3, 0.08, 0.3, 6, 0.04),
-    makeMaterial(0x66b7eb)
-  );
-  arrow.rotation.y = Math.PI / 4;
-  arrow.position.set(0.22, 1.02, 0.02);
-  group.add(arrow);
 
   group.position.set(2.2, -1.08, -0.7);
   group.rotation.y = -0.45;
@@ -440,22 +398,6 @@ function createHoursCard() {
   ring.position.y = 0.14;
   group.add(ring);
 
-  const hand1 = new THREE.Mesh(
-    new RoundedBoxGeometry(0.06, 0.02, 0.28, 4, 0.01),
-    makeMaterial(0x226b9f)
-  );
-  hand1.position.set(0, 0.14, 0.08);
-  hand1.rotation.y = Math.PI / 4;
-  group.add(hand1);
-
-  const hand2 = new THREE.Mesh(
-    new RoundedBoxGeometry(0.05, 0.02, 0.2, 4, 0.01),
-    makeMaterial(0x226b9f)
-  );
-  hand2.position.set(0, 0.14, -0.02);
-  hand2.rotation.y = -Math.PI / 6;
-  group.add(hand2);
-
   group.position.set(-2.55, -0.62, -1.05);
   group.rotation.set(-0.1, 0.42, -0.06);
   world.add(group);
@@ -471,36 +413,6 @@ function createHoursCard() {
 }
 createHoursCard();
 
-function createPostcard() {
-  const group = new THREE.Group();
-
-  const card = new THREE.Mesh(
-    new RoundedBoxGeometry(1.5, 0.18, 0.96, 10, 0.06),
-    makeMaterial(0xfffaf3)
-  );
-  group.add(card);
-
-  const stamp = new THREE.Mesh(
-    new RoundedBoxGeometry(0.24, 0.02, 0.24, 4, 0.02),
-    makeMaterial(0xa8dcff)
-  );
-  stamp.position.set(0.45, 0.1, -0.26);
-  group.add(stamp);
-
-  group.position.set(1.05, -0.64, 1.95);
-  group.rotation.set(-0.1, -0.2, 0.04);
-  world.add(group);
-
-  gsap.to(group.position, {
-    y: group.position.y + 0.05,
-    duration: 2.6,
-    repeat: -1,
-    yoyo: true,
-    ease: "sine.inOut",
-  });
-}
-createPostcard();
-
 function updateInfo(data) {
   infoKicker.textContent = data.kicker ?? "object";
   infoTitle.textContent = data.title ?? "열흘책방 물결상점";
@@ -511,6 +423,7 @@ const sceneTarget = new THREE.Vector3(0, 0.4, 0);
 const baseWorldRotation = { x: -0.06, y: -0.24 };
 world.rotation.x = baseWorldRotation.x;
 world.rotation.y = baseWorldRotation.y;
+world.scale.set(0.92, 0.92, 0.92);
 
 let isDragging = false;
 let dragStartX = 0;
@@ -548,6 +461,8 @@ window.addEventListener("pointermove", (event) => {
   mouseScene.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouseScene.y = (event.clientY / window.innerHeight) * 2 - 1;
 
+  if (!introFinished) return;
+
   if (isDragging) {
     const deltaX = (event.clientX - dragStartX) * 0.005;
     const deltaY = (event.clientY - dragStartY) * 0.003;
@@ -556,38 +471,36 @@ window.addEventListener("pointermove", (event) => {
     return;
   }
 
-  if (introOverlay.style.display === "none") {
-    const intersects = getIntersects(event);
+  const intersects = getIntersects(event);
 
-    if (hovered && (!intersects.length || hovered !== intersects[0].object)) {
-      clearHover(hovered);
-      hovered = null;
+  if (hovered && (!intersects.length || hovered !== intersects[0].object)) {
+    clearHover(hovered);
+    hovered = null;
+  }
+
+  if (intersects.length) {
+    const target = intersects[0].object;
+
+    if (hovered !== target) {
+      if (hovered) clearHover(hovered);
+      hovered = target;
+      applyHover(hovered);
+      updateInfo(hovered.userData);
     }
 
-    if (intersects.length) {
-      const target = intersects[0].object;
-
-      if (hovered !== target) {
-        if (hovered) clearHover(hovered);
-        hovered = target;
-        applyHover(hovered);
-        updateInfo(hovered.userData);
-      }
-
-      hoverTag.textContent = target.userData.label || target.userData.title || "";
-      hoverTag.style.left = `${event.clientX}px`;
-      hoverTag.style.top = `${event.clientY}px`;
-      hoverTag.classList.add("is-visible");
-      document.body.style.cursor = "pointer";
-    } else {
-      hoverTag.classList.remove("is-visible");
-      document.body.style.cursor = "default";
-    }
+    hoverTag.textContent = target.userData.label || target.userData.title || "";
+    hoverTag.style.left = `${event.clientX}px`;
+    hoverTag.style.top = `${event.clientY}px`;
+    hoverTag.classList.add("is-visible");
+    document.body.style.cursor = "pointer";
+  } else {
+    hoverTag.classList.remove("is-visible");
+    document.body.style.cursor = "default";
   }
 });
 
 window.addEventListener("pointerdown", (event) => {
-  if (introOverlay.style.display !== "none") return;
+  if (!introFinished) return;
   isDragging = true;
   dragStartX = event.clientX;
   dragStartY = event.clientY;
@@ -596,7 +509,7 @@ window.addEventListener("pointerdown", (event) => {
 });
 
 window.addEventListener("pointerup", (event) => {
-  if (introOverlay.style.display !== "none") return;
+  if (!introFinished) return;
 
   const moved =
     Math.abs(event.clientX - dragStartX) > 6 || Math.abs(event.clientY - dragStartY) > 6;
@@ -637,122 +550,82 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-function playIntro() {
-  const targetWidth = writingText.getBoundingClientRect().width;
+function finishIntro() {
+  if (introFinished) return;
+  introFinished = true;
+
+  introOverlay.classList.add("is-hidden");
+  titlePanel.classList.add("is-visible");
+  infoPanel.classList.add("is-visible");
+
+  gsap.to(world.scale, {
+    x: 1,
+    y: 1,
+    z: 1,
+    duration: 0.9,
+    ease: "power2.out",
+  });
+
+  setTimeout(() => {
+    introOverlay.style.display = "none";
+  }, 700);
+}
+
+async function playIntro() {
+  if (document.fonts?.ready) {
+    try {
+      await document.fonts.ready;
+    } catch {}
+  }
+
+  const targetWidth = Math.ceil(writingText.getBoundingClientRect().width);
 
   gsap.set(writingMask, { width: 0 });
-  gsap.set(pencilCursor, { x: -24, opacity: 1 });
-  gsap.set(introSub, { y: 10, opacity: 0 });
-  gsap.set([".title-panel", ".info-panel"], { autoAlpha: 0, y: 20 });
-  gsap.set(world.scale, { x: 0.92, y: 0.92, z: 0.92 });
+  gsap.set(pencilCursor, { x: -28, opacity: 1 });
+  gsap.set(waveWash, { yPercent: 0 });
 
-  const tl = gsap.timeline();
+  const tl = gsap.timeline({
+    onComplete: finishIntro,
+  });
 
   tl.to(writingMask, {
     width: targetWidth,
-    duration: 2.3,
+    duration: 2.1,
     ease: "power2.inOut",
   });
 
   tl.to(
     pencilCursor,
     {
-      x: targetWidth + 12,
-      duration: 2.3,
+      x: targetWidth + 10,
+      duration: 2.1,
       ease: "power2.inOut",
     },
     "<"
-  );
-
-  tl.to(
-    introSub,
-    {
-      y: 0,
-      opacity: 1,
-      duration: 0.5,
-      ease: "power2.out",
-    },
-    "-=0.2"
   );
 
   tl.to({}, { duration: 0.45 });
 
   tl.to(waveWash, {
     yPercent: -122,
-    duration: 1.55,
+    duration: 1.45,
     ease: "power2.inOut",
   });
 
   tl.to(
     ".writing-stage",
     {
+      autoAlpha: 0,
       y: -6,
-      autoAlpha: 0,
-      filter: "blur(6px)",
-      duration: 1.15,
-      ease: "power2.out",
-    },
-    "<0.08"
-  );
-
-  tl.to(
-    ".intro-paper",
-    {
-      y: -18,
-      scale: 0.985,
-      autoAlpha: 0,
-      duration: 1.15,
-      ease: "power2.out",
-    },
-    "<"
-  );
-
-  tl.to(
-    introOverlay,
-    {
-      autoAlpha: 0,
-      duration: 0.55,
-      ease: "power2.out",
-      onComplete: () => {
-        introOverlay.style.display = "none";
-      },
-    },
-    "-=0.35"
-  );
-
-  tl.to(
-    world.scale,
-    {
-      x: 1,
-      y: 1,
-      z: 1,
+      filter: "blur(5px)",
       duration: 1,
       ease: "power2.out",
     },
-    "-=0.25"
+    "<0.05"
   );
 
-  tl.to(
-    ".title-panel",
-    {
-      autoAlpha: 1,
-      y: 0,
-      duration: 0.75,
-      ease: "power2.out",
-    },
-    "-=0.85"
-  );
-
-  tl.to(
-    ".info-panel",
-    {
-      autoAlpha: 1,
-      y: 0,
-      duration: 0.75,
-      ease: "power2.out",
-    },
-    "-=0.65"
-  );
+  // failsafe
+  setTimeout(finishIntro, 5200);
 }
 
 const clock = new THREE.Clock();
