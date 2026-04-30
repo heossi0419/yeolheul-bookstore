@@ -5,7 +5,7 @@
   const pencil = document.getElementById("pencil");
   const waveTransition = document.getElementById("waveTransition");
 
-  const sceneTitle = document.getElementById("titlePanel");
+  const sceneTitle = document.getElementById("sceneTitle");
   const infoPanel = document.getElementById("infoPanel");
   const hoverTag = document.getElementById("hoverTag");
   const sceneWrap = document.getElementById("sceneWrap");
@@ -17,14 +17,18 @@
 
   let introDone = false;
 
+  function updateInfo(kicker, title, text) {
+    infoKicker.textContent = kicker;
+    infoTitle.textContent = title;
+    infoText.textContent = text;
+  }
+
   function showScene() {
     if (introDone) return;
     introDone = true;
-
     introOverlay.classList.add("is-hidden");
     sceneTitle.classList.add("is-visible");
     infoPanel.classList.add("is-visible");
-
     setTimeout(function () {
       introOverlay.style.display = "none";
     }, 800);
@@ -34,47 +38,44 @@
     const textWidth = Math.ceil(writingText.getBoundingClientRect().width);
 
     writingMask.style.width = "0px";
-    pencil.style.transform = "translateY(18px) translateX(-28px) rotate(-18deg)";
     waveTransition.style.transform = "translateY(0%)";
+    pencil.style.transition = "none";
+    writingMask.style.transition = "none";
+    waveTransition.style.transition = "none";
 
     setTimeout(function () {
-      writingMask.style.transition = "width 2.2s ease-in-out";
-      pencil.style.transition = "transform 2.2s ease-in-out";
+      writingMask.style.transition = "width 2.1s ease-in-out";
+      pencil.style.transition = "transform 2.1s ease-in-out";
       writingMask.style.width = textWidth + "px";
       pencil.style.transform =
         "translateY(18px) translateX(" + (textWidth + 12) + "px) rotate(-18deg)";
-    }, 120);
+    }, 100);
 
     setTimeout(function () {
-      waveTransition.style.transition = "transform 1.5s ease-in-out";
+      waveTransition.style.transition = "transform 1.45s ease-in-out";
       waveTransition.style.transform = "translateY(-122%)";
-      const writingStage = document.querySelector(".writing-stage");
-      writingStage.style.transition = "opacity 1s ease, transform 1s ease, filter 1s ease";
-      writingStage.style.opacity = "0";
-      writingStage.style.transform = "translateY(-6px)";
-      writingStage.style.filter = "blur(5px)";
-    }, 2850);
+
+      const stage = document.querySelector(".intro-writing");
+      stage.style.transition = "opacity 1s ease, transform 1s ease, filter 1s ease";
+      stage.style.opacity = "0";
+      stage.style.transform = "translateY(-6px)";
+      stage.style.filter = "blur(5px)";
+    }, 2800);
 
     setTimeout(showScene, 4300);
-    setTimeout(showScene, 5400);
-  }
-
-  function updateInfo(kicker, title, text) {
-    infoKicker.textContent = kicker;
-    infoTitle.textContent = title;
-    infoText.textContent = text;
+    setTimeout(showScene, 5200);
   }
 
   const infoMap = {
     "object-book": {
       kicker: "book",
       title: "희망도서 바로대출",
-      text: "책 오브젝트를 클릭하면 희망도서 바로대출 서비스로 이동합니다."
+      text: "원하는 책을 바로대출 서비스로 편하게 신청할 수 있습니다."
     },
     "object-insta": {
       kicker: "instagram",
       title: "사장님 인스타 @briggeme",
-      text: "인스타 카드에서 사장님 인스타그램으로 이동할 수 있습니다."
+      text: "인스타그램에서 책방의 분위기와 소식을 확인할 수 있습니다."
     },
     "object-blog": {
       kicker: "blog",
@@ -94,20 +95,20 @@
   };
 
   document.querySelectorAll(".object-card").forEach(function (card) {
-    card.addEventListener("mouseenter", function (e) {
+    card.addEventListener("mouseenter", function () {
       const cls = Array.from(card.classList).find(function (name) {
         return infoMap[name];
       });
+      if (!cls) return;
 
-      if (cls) {
-        updateInfo(
-          infoMap[cls].kicker,
-          infoMap[cls].title,
-          infoMap[cls].text
-        );
-        hoverTag.textContent = infoMap[cls].title;
-        hoverTag.classList.add("is-visible");
-      }
+      updateInfo(
+        infoMap[cls].kicker,
+        infoMap[cls].title,
+        infoMap[cls].text
+      );
+
+      hoverTag.textContent = infoMap[cls].title;
+      hoverTag.classList.add("is-visible");
     });
 
     card.addEventListener("mousemove", function (e) {
@@ -120,27 +121,35 @@
     });
   });
 
-  let mouseX = 0;
-  let mouseY = 0;
-
   window.addEventListener("mousemove", function (e) {
     if (!introDone) return;
 
-    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    const x = (e.clientX / window.innerWidth - 0.5) * 2;
+    const y = (e.clientY / window.innerHeight - 0.5) * 2;
 
     cards.forEach(function (el) {
       const depth = Number(el.dataset.depth || 10);
-      const tx = mouseX * depth * 0.35;
-      const ty = mouseY * depth * 0.25;
-      el.style.transform = "translate(" + tx + "px, " + ty + "px)";
+      const tx = x * depth * 0.35;
+      const ty = y * depth * 0.25;
+
+      if (el.classList.contains("object-time") && window.innerWidth <= 640) {
+        el.style.transform = "translateX(-50%) translate(" + tx + "px, " + ty + "px)";
+      } else {
+        el.style.transform = "translate(" + tx + "px, " + ty + "px)";
+      }
     });
+
+    const titleX = x * 10;
+    const titleY = y * 8;
+    sceneTitle.style.transform =
+      "translate(" + titleX + "px, " + titleY + "px)";
+    sceneTitle.classList.add("is-visible");
   });
 
   updateInfo(
     "welcome",
-    "작은 책방 세계를 둘러보세요",
-    "책, 카드, 메모, 입간판, 시계 카드를 클릭하면 필요한 정보로 연결됩니다."
+    "필요한 기능을 바로 이용해보세요",
+    "원하는 오브젝트를 클릭하면 해당 페이지로 바로 이동합니다."
   );
 
   if (document.fonts && document.fonts.ready) {

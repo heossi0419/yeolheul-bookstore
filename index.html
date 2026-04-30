@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>열흘책방 물결상점</title>
-  <meta name="description" content="열흘책방 물결상점 인터랙티브 랜딩페이지" />
+  <meta name="description" content="열흘책방 물결상점 인터랙티브 링크 사이트" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -18,8 +18,7 @@
   <div class="page-glow glow-left"></div>
   <div class="page-glow glow-right"></div>
 
-  <!-- Intro -->
-  <section class="intro-overlay" id="introOverlay" aria-hidden="true">
+  <section class="intro-overlay" id="introOverlay">
     <div class="intro-paper">
       <div class="intro-grid"></div>
 
@@ -34,23 +33,24 @@
     </div>
   </section>
 
-  <!-- Main Scene -->
-  <main class="scene-page" id="scenePage">
+  <main class="scene-page">
     <section class="scene-wrap" id="sceneWrap">
-      <div class="scene-title">
+      <div class="scene-title" id="sceneTitle">
         <div class="manuscript-box">
-          <div class="paper-grid"></div>
+          <div class="paper-grid" aria-hidden="true"></div>
           <h1>열흘책방<br />물결상점</h1>
         </div>
       </div>
 
-      <div class="object-layer">
+      <div class="object-layer" id="objectLayer">
         <a
           class="object-card object-book"
           href="https://library.busan.go.kr:8585/baro/homepage/main.do"
           target="_blank"
           rel="noopener noreferrer"
-          data-depth="24"
+          data-label="희망도서 바로대출"
+          data-title="희망도서 바로대출"
+          data-text="원하는 책을 바로대출 서비스로 편하게 신청할 수 있습니다."
         >
           <span class="object-kicker">book</span>
           <strong>희망도서<br />바로대출</strong>
@@ -61,7 +61,9 @@
           href="https://www.instagram.com/briggeme"
           target="_blank"
           rel="noopener noreferrer"
-          data-depth="18"
+          data-label="사장님 인스타"
+          data-title="사장님 인스타 @briggeme"
+          data-text="인스타그램에서 책방의 분위기와 소식을 확인할 수 있습니다."
         >
           <span class="object-kicker">instagram</span>
           <strong>@briggeme</strong>
@@ -72,7 +74,9 @@
           href="https://blog.naver.com/brigge"
           target="_blank"
           rel="noopener noreferrer"
-          data-depth="14"
+          data-label="블로그"
+          data-title="블로그"
+          data-text="블로그에서 책방 관련 기록과 글을 볼 수 있습니다."
         >
           <span class="object-kicker">blog note</span>
           <strong>블로그</strong>
@@ -83,13 +87,20 @@
           href="https://naver.me/FsoFHJME"
           target="_blank"
           rel="noopener noreferrer"
-          data-depth="22"
+          data-label="길 안내"
+          data-title="길 안내"
+          data-text="책방 위치와 길 안내를 바로 확인할 수 있습니다."
         >
           <span class="object-kicker">guide sign</span>
           <strong>길 안내</strong>
         </a>
 
-        <div class="object-card object-time" data-depth="12">
+        <div
+          class="object-card object-time"
+          data-label="운영 시간"
+          data-title="운영 시간"
+          data-text="월 · 화 · 수 · 목 12:00 ~ 17:00"
+        >
           <span class="object-kicker">time card</span>
           <strong>운영 시간</strong>
           <p>월 · 화 · 수 · 목<br />12:00 ~ 17:00</p>
@@ -99,6 +110,14 @@
         <div class="wave-ribbon wave-ribbon-2" data-depth="16"></div>
         <div class="wave-ribbon wave-ribbon-3" data-depth="8"></div>
       </div>
+
+      <aside class="info-panel" id="infoPanel">
+        <span class="info-kicker" id="infoKicker">welcome</span>
+        <h2 id="infoTitle">필요한 기능을 바로 이용해보세요</h2>
+        <p id="infoText">원하는 오브젝트를 클릭하면 해당 페이지로 바로 이동합니다.</p>
+      </aside>
+
+      <div class="hover-tag" id="hoverTag"></div>
     </section>
   </main>
 
