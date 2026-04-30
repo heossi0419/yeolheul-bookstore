@@ -3,80 +3,88 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>열흘책방 물결 상점</title>
-  <meta name="description" content="열흘책방 물결 상점 바로가기 사이트" />
+  <title>열흘책방 물결상점</title>
+  <meta name="description" content="열흘책방 물결상점 바로가기 사이트" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Pretendard:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="page-noise"></div>
   <div class="page-glow glow-left"></div>
   <div class="page-glow glow-right"></div>
+  <div class="page-grid"></div>
 
-  <main class="hero-page" id="top">
-    <section class="hero-wrap">
-      <div class="hero-copy">
+  <main class="page">
+    <section class="hero-card">
+      <div class="title-wrap">
         <span class="eyebrow">bookstore · links · guide</span>
-        <h1>열흘책방 물결 상점</h1>
+
+        <div class="manuscript-title">
+          <div class="paper-grid" aria-hidden="true"></div>
+          <h1>열흘책방 물결상점</h1>
+        </div>
       </div>
 
-      <div class="hero-visual">
-        <div class="hero-orb orb-1"></div>
-        <div class="hero-orb orb-2"></div>
+      <div class="link-group">
+        <a
+          class="link-button"
+          href="https://library.busan.go.kr:8585/baro/homepage/main.do"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="link-label">희망도서 바로대출</span>
+          <span class="link-arrow">↗</span>
+        </a>
 
-        <article class="main-card">
-          <div class="link-list">
-            <a
-              class="link-button"
-              href="https://library.busan.go.kr:8585/baro/homepage/main.do"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              희망도서 바로대출
-            </a>
+        <a
+          class="link-button"
+          href="https://www.instagram.com/briggeme"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="link-label">사장님 인스타 @briggeme</span>
+          <span class="link-arrow">↗</span>
+        </a>
 
-            <a
-              class="link-button"
-              href="https://novelayer.github.io/yeolheul-bookstore/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              사장님 인스타
-            </a>
+        <a
+          class="link-button"
+          href="https://blog.naver.com/brigge"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="link-label">블로그</span>
+          <span class="link-arrow">↗</span>
+        </a>
 
-            <a
-              class="link-button"
-              href="https://blog.naver.com/brigge"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              블로그
-            </a>
+        <a
+          class="link-button"
+          href="https://naver.me/FsoFHJME"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="link-label">길 안내</span>
+          <span class="link-arrow">↗</span>
+        </a>
+      </div>
 
-            <a
-              class="link-button"
-              href="https://naver.me/FsoFHJME"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              길 안내
-            </a>
-          </div>
+      <div class="info-panel">
+        <span class="info-title">운영 시간</span>
+        <p class="info-time">월 · 화 · 수 · 목 12:00 ~ 17:00</p>
+      </div>
 
-          <div class="info-box">
-            <span class="info-label">운영 시간</span>
-            <p class="info-time">월 · 화 · 수 · 목 12:00 ~ 17:00</p>
-          </div>
-        </article>
+      <div class="float-card float-card-left">
+        <span>ivory</span>
+        <strong>paper mood</strong>
+      </div>
 
-        <div class="floating-card floating-card-top">
-          <span>links</span>
-          <strong>필요한 정보에 빠르게 닿을 수 있도록</strong>
-        </div>
-
-        <div class="floating-card floating-card-bottom">
-          <span>mood</span>
-          <strong>ivory · sky · blue</strong>
-        </div>
+      <div class="float-card float-card-right">
+        <span>sky blue</span>
+        <strong>wave tone</strong>
       </div>
     </section>
   </main>
