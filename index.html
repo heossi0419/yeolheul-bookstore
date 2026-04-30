@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>열흘책방 물결상점</title>
-  <meta name="description" content="열흘책방 물결상점 인터랙티브 링크 사이트" />
+  <meta name="description" content="열흘책방 물결상점 인터랙티브 링크 랜딩페이지" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -18,11 +18,12 @@
   <div class="page-glow glow-left"></div>
   <div class="page-glow glow-right"></div>
 
-  <section class="intro-overlay" id="introOverlay">
+  <!-- intro -->
+  <section class="intro-overlay" id="introOverlay" aria-hidden="true">
     <div class="intro-paper">
       <div class="intro-grid"></div>
 
-      <div class="intro-writing">
+      <div class="intro-writing" id="introWriting">
         <div class="writing-mask" id="writingMask">
           <span class="writing-text" id="writingText">열흘책방 물결상점</span>
         </div>
@@ -33,24 +34,27 @@
     </div>
   </section>
 
+  <!-- main -->
   <main class="scene-page">
     <section class="scene-wrap" id="sceneWrap">
-      <div class="scene-title" id="sceneTitle">
+      <header class="scene-title" id="sceneTitle">
         <div class="manuscript-box">
-          <div class="paper-grid" aria-hidden="true"></div>
+          <div class="paper-grid"></div>
           <h1>열흘책방<br />물결상점</h1>
         </div>
-      </div>
+      </header>
 
-      <div class="object-layer" id="objectLayer">
+      <section class="object-layer" id="objectLayer">
         <a
           class="object-card object-book"
           href="https://library.busan.go.kr:8585/baro/homepage/main.do"
           target="_blank"
           rel="noopener noreferrer"
           data-label="희망도서 바로대출"
+          data-kicker="book"
           data-title="희망도서 바로대출"
           data-text="원하는 책을 바로대출 서비스로 편하게 신청할 수 있습니다."
+          data-depth="20"
         >
           <span class="object-kicker">book</span>
           <strong>희망도서<br />바로대출</strong>
@@ -62,8 +66,10 @@
           target="_blank"
           rel="noopener noreferrer"
           data-label="사장님 인스타"
+          data-kicker="instagram"
           data-title="사장님 인스타 @briggeme"
           data-text="인스타그램에서 책방의 분위기와 소식을 확인할 수 있습니다."
+          data-depth="16"
         >
           <span class="object-kicker">instagram</span>
           <strong>@briggeme</strong>
@@ -75,8 +81,10 @@
           target="_blank"
           rel="noopener noreferrer"
           data-label="블로그"
+          data-kicker="blog"
           data-title="블로그"
           data-text="블로그에서 책방 관련 기록과 글을 볼 수 있습니다."
+          data-depth="12"
         >
           <span class="object-kicker">blog note</span>
           <strong>블로그</strong>
@@ -88,8 +96,10 @@
           target="_blank"
           rel="noopener noreferrer"
           data-label="길 안내"
+          data-kicker="guide"
           data-title="길 안내"
           data-text="책방 위치와 길 안내를 바로 확인할 수 있습니다."
+          data-depth="18"
         >
           <span class="object-kicker">guide sign</span>
           <strong>길 안내</strong>
@@ -98,18 +108,20 @@
         <div
           class="object-card object-time"
           data-label="운영 시간"
+          data-kicker="hours"
           data-title="운영 시간"
           data-text="월 · 화 · 수 · 목 12:00 ~ 17:00"
+          data-depth="10"
         >
           <span class="object-kicker">time card</span>
           <strong>운영 시간</strong>
           <p>월 · 화 · 수 · 목<br />12:00 ~ 17:00</p>
         </div>
 
-        <div class="wave-ribbon wave-ribbon-1" data-depth="10"></div>
-        <div class="wave-ribbon wave-ribbon-2" data-depth="16"></div>
-        <div class="wave-ribbon wave-ribbon-3" data-depth="8"></div>
-      </div>
+        <div class="wave-ribbon wave-ribbon-1" data-depth="8"></div>
+        <div class="wave-ribbon wave-ribbon-2" data-depth="14"></div>
+        <div class="wave-ribbon wave-ribbon-3" data-depth="6"></div>
+      </section>
 
       <aside class="info-panel" id="infoPanel">
         <span class="info-kicker" id="infoKicker">welcome</span>
