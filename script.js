@@ -1,5 +1,6 @@
 (function () {
   const introOverlay = document.getElementById("introOverlay");
+  const introWriting = document.getElementById("introWriting");
   const writingMask = document.getElementById("writingMask");
   const writingText = document.getElementById("writingText");
   const pencil = document.getElementById("pencil");
@@ -15,6 +16,8 @@
   const infoText = document.getElementById("infoText");
 
   let introDone = false;
+  let introStarted = false;
+  let fallbackTimer = null;
 
   function updateInfo(kicker, title, text) {
     if (infoKicker) infoKicker.textContent = kicker;
@@ -26,54 +29,104 @@
     if (introDone) return;
     introDone = true;
 
+    if (fallbackTimer) {
+      clearTimeout(fallbackTimer);
+      fallbackTimer = null;
+    }
+
     if (introOverlay) introOverlay.classList.add("is-hidden");
     if (sceneTitle) sceneTitle.classList.add("is-visible");
     if (infoPanel) infoPanel.classList.add("is-visible");
 
     setTimeout(function () {
-      if (introOverlay) introOverlay.style.display = "none";
-    }, 800);
+      if (introOverlay) {
+        introOverlay.style.display = "none";
+      }
+    }, 850);
+  }
+
+  function skipIntro() {
+    if (!introOverlay || introDone) return;
+
+    if (introWriting) {
+      introWriting.style.opacity = "0";
+      introWriting.style.transform = "translateY(-6px)";
+      introWriting.style.filter = "blur(5px)";
+    }
+
+    if (waveTransition) {
+      waveTransition.style.transition = "transform 0.8s ease-in-out";
+      waveTransition.style.transform = "translateY(-122%)";
+    }
+
+    setTimeout(showScene, 500);
+  }
+
+  function getSafeTextWidth() {
+    if (!writingText) return 320;
+
+    const rectWidth = Math.ceil(writingText.getBoundingClientRect().width);
+    const offsetWidth = Math.ceil(writingText.offsetWidth);
+    const scrollWidth = Math.ceil(writingText.scrollWidth);
+
+    const width = Math.max(rectWidth, offsetWidth, scrollWidth);
+
+    return width > 0 ? width : 320;
   }
 
   function runIntro() {
+    if (introStarted) return;
+    introStarted = true;
+
     if (!writingMask || !writingText || !pencil || !waveTransition) {
       showScene();
       return;
     }
 
-    const textWidth = Math.ceil(writingText.getBoundingClientRect().width);
+    const textWidth = getSafeTextWidth();
 
     writingMask.style.width = "0px";
-    waveTransition.style.transform = "translateY(0%)";
-    pencil.style.transition = "none";
     writingMask.style.transition = "none";
+
+    pencil.style.transition = "none";
+    pencil.style.transform = window.innerWidth <= 640
+      ? "translateY(12px) translateX(-28px) rotate(-18deg)"
+      : "translateY(18px) translateX(-28px) rotate(-18deg)";
+
     waveTransition.style.transition = "none";
+    waveTransition.style.transform = "translateY(0%)";
+
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        writingMask.style.transition = "width 2.1s ease-in-out";
+        pencil.style.transition = "transform 2.1s ease-in-out";
+
+        writingMask.style.width = textWidth + "px";
+
+        pencil.style.transform = window.innerWidth <= 640
+          ? "translateY(12px) translateX(" + (textWidth + 12) + "px) rotate(-18deg)"
+          : "translateY(18px) translateX(" + (textWidth + 12) + "px) rotate(-18deg)";
+      });
+    });
 
     setTimeout(function () {
-      writingMask.style.transition = "width 2.1s ease-in-out";
-      pencil.style.transition = "transform 2.1s ease-in-out";
+      if (waveTransition) {
+        waveTransition.style.transition = "transform 1.45s ease-in-out";
+        waveTransition.style.transform = "translateY(-122%)";
+      }
 
-      writingMask.style.width = textWidth + "px";
-      pencil.style.transform =
-        "translateY(18px) translateX(" + (textWidth + 12) + "px) rotate(-18deg)";
-    }, 100);
-
-    setTimeout(function () {
-      waveTransition.style.transition = "transform 1.45s ease-in-out";
-      waveTransition.style.transform = "translateY(-122%)";
-
-      const stage = document.getElementById("introWriting");
-      if (stage) {
-        stage.style.transition =
-          "opacity 1s ease, transform 1s ease, filter 1s ease";
-        stage.style.opacity = "0";
-        stage.style.transform = "translateY(-6px)";
-        stage.style.filter = "blur(5px)";
+      if (introWriting) {
+        introWriting.style.opacity = "0";
+        introWriting.style.transform = "translateY(-6px)";
+        introWriting.style.filter = "blur(5px)";
       }
     }, 2800);
 
     setTimeout(showScene, 4300);
-    setTimeout(showScene, 5200);
+
+    fallbackTimer = setTimeout(function () {
+      showScene();
+    }, 4800);
   }
 
   function enableHoverInfo() {
@@ -99,6 +152,13 @@
 
       card.addEventListener("mouseleave", function () {
         if (hoverTag) hoverTag.classList.remove("is-visible");
+      });
+
+      card.addEventListener("click", function () {
+        const kicker = card.dataset.kicker || "object";
+        const title = card.dataset.title || "열흘책방 물결상점";
+        const text = card.dataset.text || "";
+        updateInfo(kicker, title, text);
       });
     });
   }
@@ -132,18 +192,37 @@
     });
   }
 
-  updateInfo(
-    "welcome",
-    "필요한 기능을 바로 이용해보세요",
-    "원하는 오브젝트를 클릭하면 해당 페이지로 바로 이동합니다."
-  );
+  function startWhenReady() {
+    updateInfo(
+      "welcome",
+      "필요한 기능을 바로 이용해보세요",
+      "원하는 오브젝트를 클릭하면 해당 페이지로 바로 이동합니다."
+    );
 
-  enableHoverInfo();
-  enableParallax();
+    enableHoverInfo();
+    enableParallax();
 
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(runIntro).catch(showScene);
+    if (introOverlay) {
+      introOverlay.addEventListener("click", skipIntro);
+    }
+
+    if (document.fonts && document.fonts.ready) {
+      Promise.race([
+        document.fonts.ready,
+        new Promise(function (resolve) {
+          setTimeout(resolve, 700);
+        })
+      ])
+        .then(runIntro)
+        .catch(runIntro);
+    } else {
+      setTimeout(runIntro, 120);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", startWhenReady);
   } else {
-    setTimeout(runIntro, 120);
+    startWhenReady();
   }
 })();
