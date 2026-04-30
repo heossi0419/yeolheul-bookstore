@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>열흘책방 물결상점</title>
-  <meta name="description" content="열흘책방 물결상점 인터랙티브 링크 랜딩페이지" />
+  <meta name="description" content="열흘책방 물결상점 인터랙티브 랜딩페이지" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -44,92 +44,135 @@
         </div>
       </header>
 
+      <!-- ambient real-photo postcards -->
+      <div class="ambient-photos" aria-hidden="true">
+        <div class="ambient-card ambient-card-a" data-depth="6">
+          <img src="images/post-1.jpg" alt="" />
+        </div>
+        <div class="ambient-card ambient-card-b" data-depth="10">
+          <img src="images/post-7.jpg" alt="" />
+        </div>
+      </div>
+
+      <!-- interactive objects -->
       <section class="object-layer" id="objectLayer">
-        <a
+        <button
           class="object-card object-book"
-          href="https://library.busan.go.kr:8585/baro/homepage/main.do"
-          target="_blank"
-          rel="noopener noreferrer"
+          type="button"
           data-label="희망도서 바로대출"
           data-kicker="book"
           data-title="희망도서 바로대출"
-          data-text="원하는 책을 바로대출 서비스로 편하게 신청할 수 있습니다."
+          data-text="원하는 책을 더 가깝게 만날 수 있도록 바로대출 서비스로 연결합니다."
+          data-link="https://library.busan.go.kr:8585/baro/homepage/main.do"
+          data-image="images/post-3.jpg"
+          data-alt="테이블 위에 펼쳐진 책과 원고지, 필기 도구가 놓인 열흘책방 풍경"
           data-depth="20"
         >
           <span class="object-kicker">book</span>
           <strong>희망도서<br />바로대출</strong>
-        </a>
+        </button>
 
-        <a
+        <button
           class="object-card object-insta"
-          href="https://www.instagram.com/briggeme"
-          target="_blank"
-          rel="noopener noreferrer"
+          type="button"
           data-label="사장님 인스타"
           data-kicker="instagram"
           data-title="사장님 인스타 @briggeme"
-          data-text="인스타그램에서 책방의 분위기와 소식을 확인할 수 있습니다."
+          data-text="책방의 분위기와 일상을 가장 빠르게 만날 수 있는 공간입니다."
+          data-link="https://www.instagram.com/briggeme"
+          data-image="images/post-5.jpg"
+          data-alt="밤의 책방 입구와 창가가 따뜻한 조명으로 보이는 열흘책방 풍경"
           data-depth="16"
         >
           <span class="object-kicker">instagram</span>
           <strong>@briggeme</strong>
-        </a>
+        </button>
 
-        <a
+        <button
           class="object-card object-blog"
-          href="https://blog.naver.com/brigge"
-          target="_blank"
-          rel="noopener noreferrer"
+          type="button"
           data-label="블로그"
           data-kicker="blog"
           data-title="블로그"
-          data-text="블로그에서 책방 관련 기록과 글을 볼 수 있습니다."
+          data-text="책방의 기록과 이야기, 남겨두고 싶은 장면들을 차분히 읽어볼 수 있습니다."
+          data-link="https://blog.naver.com/brigge"
+          data-image="images/post-2.jpg"
+          data-alt="커튼 너머 햇빛이 들어오는 책상 위에 책들이 놓인 열흘책방 실내 풍경"
           data-depth="12"
         >
           <span class="object-kicker">blog note</span>
           <strong>블로그</strong>
-        </a>
+        </button>
 
-        <a
+        <button
           class="object-card object-map"
-          href="https://naver.me/FsoFHJME"
-          target="_blank"
-          rel="noopener noreferrer"
+          type="button"
           data-label="길 안내"
           data-kicker="guide"
           data-title="길 안내"
-          data-text="책방 위치와 길 안내를 바로 확인할 수 있습니다."
+          data-text="책방으로 오는 길을 실제 공간의 분위기와 함께 확인해보세요."
+          data-link="https://naver.me/FsoFHJME"
+          data-image="images/post-4.jpg"
+          data-alt="낮 시간대 식물과 문이 보이는 열흘책방 입구 주변 풍경"
           data-depth="18"
         >
           <span class="object-kicker">guide sign</span>
           <strong>길 안내</strong>
-        </a>
+        </button>
 
-        <div
+        <button
           class="object-card object-time"
+          type="button"
           data-label="운영 시간"
           data-kicker="hours"
           data-title="운영 시간"
           data-text="월 · 화 · 수 · 목 12:00 ~ 17:00"
+          data-link=""
+          data-image="images/post-6.jpg"
+          data-alt="의자와 책장, 스탠드 조명이 보이는 차분한 열흘책방 내부 풍경"
           data-depth="10"
         >
           <span class="object-kicker">time card</span>
           <strong>운영 시간</strong>
           <p>월 · 화 · 수 · 목<br />12:00 ~ 17:00</p>
-        </div>
+        </button>
 
         <div class="wave-ribbon wave-ribbon-1" data-depth="8"></div>
         <div class="wave-ribbon wave-ribbon-2" data-depth="14"></div>
         <div class="wave-ribbon wave-ribbon-3" data-depth="6"></div>
       </section>
 
+      <!-- info -->
       <aside class="info-panel" id="infoPanel">
         <span class="info-kicker" id="infoKicker">welcome</span>
         <h2 id="infoTitle">필요한 기능을 바로 이용해보세요</h2>
-        <p id="infoText">원하는 오브젝트를 클릭하면 해당 페이지로 바로 이동합니다.</p>
+        <p id="infoText">오브젝트를 누르면 실제 책방 사진과 함께 정보가 열립니다.</p>
+      </aside>
+
+      <!-- postcard panel -->
+      <aside class="photo-panel" id="photoPanel" aria-hidden="true">
+        <button class="photo-panel-close" id="photoPanelClose" type="button" aria-label="닫기">
+          닫기
+        </button>
+
+        <div class="photo-panel-card">
+          <div class="photo-frame">
+            <img id="panelImage" src="" alt="" />
+          </div>
+
+          <div class="photo-meta">
+            <span class="photo-kicker" id="panelKicker">book</span>
+            <h3 id="panelTitle">희망도서 바로대출</h3>
+            <p id="panelText">원하는 책을 더 가깝게 만날 수 있도록 바로대출 서비스로 연결합니다.</p>
+            <a id="panelLink" class="photo-link" href="#" target="_blank" rel="noopener noreferrer">
+              바로가기
+            </a>
+          </div>
+        </div>
       </aside>
 
       <div class="hover-tag" id="hoverTag"></div>
+      <div class="panel-dim" id="panelDim"></div>
     </section>
   </main>
 
