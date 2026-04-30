@@ -4,10 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>열흘책방 물결상점</title>
-  <meta
-    name="description"
-    content="작은 3D 책방 세계를 탐험하며 열흘책방 물결상점의 링크와 정보를 만나는 인터랙티브 웹사이트"
-  />
+  <meta name="description" content="열흘책방 물결상점 인터랙티브 랜딩페이지" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -21,47 +18,90 @@
   <div class="page-glow glow-left"></div>
   <div class="page-glow glow-right"></div>
 
-  <div class="intro-overlay" id="introOverlay" aria-hidden="true">
+  <!-- Intro -->
+  <section class="intro-overlay" id="introOverlay" aria-hidden="true">
     <div class="intro-paper">
       <div class="intro-grid"></div>
 
-      <div class="writing-stage">
+      <div class="intro-writing">
         <div class="writing-mask" id="writingMask">
           <span class="writing-text" id="writingText">열흘책방 물결상점</span>
         </div>
-        <span class="pencil-cursor" id="pencilCursor"></span>
+        <span class="pencil" id="pencil"></span>
       </div>
 
-      <div class="wave-wash" id="waveWash"></div>
+      <div class="wave-transition" id="waveTransition"></div>
     </div>
-  </div>
+  </section>
 
-  <main class="scene-page">
-    <canvas id="world"></canvas>
-
-    <div class="ui-layer">
-      <section class="title-panel" id="titlePanel">
+  <!-- Main Scene -->
+  <main class="scene-page" id="scenePage">
+    <section class="scene-wrap" id="sceneWrap">
+      <div class="scene-title">
         <div class="manuscript-box">
-          <div class="paper-grid" aria-hidden="true"></div>
+          <div class="paper-grid"></div>
           <h1>열흘책방<br />물결상점</h1>
         </div>
-      </section>
+      </div>
 
-      <aside class="info-panel" id="infoPanel">
-        <span class="info-kicker" id="infoKicker">welcome</span>
-        <h2 id="infoTitle">작은 책방 세계를 둘러보세요</h2>
-        <p id="infoText">
-          책, 카드, 메모, 입간판, 시계 카드를 클릭하면 필요한 정보로 연결됩니다.
-        </p>
-      </aside>
+      <div class="object-layer">
+        <a
+          class="object-card object-book"
+          href="https://library.busan.go.kr:8585/baro/homepage/main.do"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-depth="24"
+        >
+          <span class="object-kicker">book</span>
+          <strong>희망도서<br />바로대출</strong>
+        </a>
 
-      <div class="hover-tag" id="hoverTag"></div>
-    </div>
+        <a
+          class="object-card object-insta"
+          href="https://www.instagram.com/briggeme"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-depth="18"
+        >
+          <span class="object-kicker">instagram</span>
+          <strong>@briggeme</strong>
+        </a>
+
+        <a
+          class="object-card object-blog"
+          href="https://blog.naver.com/brigge"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-depth="14"
+        >
+          <span class="object-kicker">blog note</span>
+          <strong>블로그</strong>
+        </a>
+
+        <a
+          class="object-card object-map"
+          href="https://naver.me/FsoFHJME"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-depth="22"
+        >
+          <span class="object-kicker">guide sign</span>
+          <strong>길 안내</strong>
+        </a>
+
+        <div class="object-card object-time" data-depth="12">
+          <span class="object-kicker">time card</span>
+          <strong>운영 시간</strong>
+          <p>월 · 화 · 수 · 목<br />12:00 ~ 17:00</p>
+        </div>
+
+        <div class="wave-ribbon wave-ribbon-1" data-depth="10"></div>
+        <div class="wave-ribbon wave-ribbon-2" data-depth="16"></div>
+        <div class="wave-ribbon wave-ribbon-3" data-depth="8"></div>
+      </div>
+    </section>
   </main>
 
-  <!-- 전역 CDN 방식 -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
