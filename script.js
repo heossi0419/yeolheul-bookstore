@@ -164,30 +164,45 @@
   }
 
   function enableParallax() {
+    function resetMobileLayout() {
+      cards.forEach(function (el) {
+        el.style.transform = "none";
+      });
+  
+      if (sceneTitle && sceneTitle.classList.contains("is-visible")) {
+        sceneTitle.style.transform = "none";
+      }
+    }
+  
     window.addEventListener("mousemove", function (e) {
       if (!introDone) return;
-
+  
+      if (window.innerWidth <= 640) {
+        resetMobileLayout();
+        return;
+      }
+  
       const x = (e.clientX / window.innerWidth - 0.5) * 2;
       const y = (e.clientY / window.innerHeight - 0.5) * 2;
-
+  
       cards.forEach(function (el) {
         const depth = Number(el.dataset.depth || 10);
         const tx = x * depth * 0.35;
         const ty = y * depth * 0.25;
-
-        if (el.classList.contains("object-time") && window.innerWidth <= 640) {
-          el.style.transform =
-            "translateX(-50%) translate(" + tx + "px, " + ty + "px)";
-        } else {
-          el.style.transform = "translate(" + tx + "px, " + ty + "px)";
-        }
+        el.style.transform = "translate(" + tx + "px, " + ty + "px)";
       });
-
+  
       if (sceneTitle && sceneTitle.classList.contains("is-visible")) {
         const titleX = x * 10;
         const titleY = y * 8;
         sceneTitle.style.transform =
           "translate(" + titleX + "px, " + titleY + "px)";
+      }
+    });
+  
+    window.addEventListener("resize", function () {
+      if (window.innerWidth <= 640) {
+        resetMobileLayout();
       }
     });
   }
